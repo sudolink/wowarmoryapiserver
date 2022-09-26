@@ -1,0 +1,36 @@
+{
+  "name": "wowarmoryapiserver",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "fetches character info from a vMangos mysql database and serves it to the WoWArmory frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudolink/wowarmoryapiserver.git"
+  },
+  "keywords": [
+    "wow",
+    "armory",
+    "vmangos",
+    "mysql",
+    "api"
+  ],
+  "author": "sudolink",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudolink/wowarmoryapiserver/issues"
+  },
+  "homepage": "https://github.com/sudolink/wowarmoryapiserver#readme",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
