@@ -17,7 +17,7 @@ function reportRequest(req,res,next){
     console.log(req.url);
     next()
 }
-app.use(reportRequest);
+//app.use(reportRequest);
 
 app.get("/api/getAllCharNames", (req,res) => {
     let dbConn = createNewConn();
@@ -52,10 +52,11 @@ app.get("/api/getchargear", (req,res)=> {
     console.log(req.query.guid)
     if(req.query.guid != undefined){
         let dbConn = createNewConn()
-        const queryString = `SELECT slot, item, item_template FROM character_inventory WHERE guid=${req.query.guid} AND slot<19 ORDER BY slot`;
+        const queryString = `SELECT slot, item, item_template FROM character_inventory WHERE guid=${req.query.guid} AND bag=0 AND slot < 19 ORDER BY slot`;
         dbConn.connect()
         dbConn.query(queryString, (err,rows,fields)=>{
             res.status(200).send(rows);
+            console.log(rows);
         })
         dbConn.end()
     }
@@ -65,9 +66,9 @@ app.get("/api/getbaseitem", (req,res) => {
     console.log(req.query.item_template);
     if(req.query.item_template != undefined){
         let dbConn = createNewConn("mangos"); //base item info is in this DB
-        const queryString = `SELECT * FROM item_template WHERE entry=${req.query.item_template}`;
+        const queryStringItem = `SELECT * FROM item_template WHERE entry=${req.query.item_template} AND class IN (2,4)`;
         dbConn.connect();
-        dbConn.query(queryString, (err,rows,fields)=>{
+        dbConn.query(queryStringItem, (err,rows,fields)=>{
             res.status(200).send(rows);
         })
         dbConn.end();
