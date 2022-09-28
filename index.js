@@ -38,11 +38,11 @@ app.get("/api/getchar", (req,res) => {
         dbConn.connect()
         const queryName = req.query.name;
         dbConn.query(`SELECT guid,name,race,class,gender,level,online FROM characters WHERE name="${queryName}"`, (err,rows,fields) => {
-            if(rows.length < 1){
-                res.status(404).send("No such character");
-            }else{
-                res.status(200).send(rows);
-            }
+            err == null ?
+            rows.length < 1 ?
+            res.status(404).send("No such character"):
+            res.status(200).send(rows):
+            res.status(404).send("Invalid input");
         })
         dbConn.end();
     }
@@ -56,7 +56,7 @@ app.get("/api/getchargear", (req,res)=> {
         dbConn.connect()
         dbConn.query(queryString, (err,rows,fields)=>{
             res.status(200).send(rows);
-            console.log(rows);
+            // console.log(rows);
         })
         dbConn.end()
     }
