@@ -49,7 +49,7 @@ app.get("/api/getchar", (req,res) => {
 })
 
 app.get("/api/getchargear", (req,res)=> {
-    console.log(req.query.guid)
+    //console.log(req.query.guid)
     if(req.query.guid != undefined){
         let dbConn = createNewConn()
         const queryString = `SELECT slot, item, item_template FROM character_inventory WHERE guid=${req.query.guid} AND bag=0 AND slot < 19 ORDER BY slot`;
