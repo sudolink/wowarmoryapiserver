@@ -2,7 +2,13 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import {createNewConn} from "./dbHelp.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ICON_DIR = path.join(__dirname, "/icons/")
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -12,6 +18,10 @@ app.use(express.static("icons"))
 //middleware
 app.use(express.json()) //for raw json
 app.use(express.urlencoded({extended:false}))
+app.all('/*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 
 function reportRequest(req,res,next){
     console.log(req.url);
@@ -63,7 +73,7 @@ app.get("/api/getchargear", (req,res)=> {
 })
 
 app.get("/api/getbaseitem", (req,res) => {
-    console.log(req.query.item_template);
+    //console.log(req.query.item_template);
     if(req.query.item_template != undefined){
         let dbConn = createNewConn("mangos"); //base item info is in this DB
         const queryStringItem = `SELECT * FROM item_template WHERE entry=${req.query.item_template} AND class IN (2,4)`;
@@ -76,13 +86,30 @@ app.get("/api/getbaseitem", (req,res) => {
 })
 
 app.get("/api/getitemicon", (req,res) => {
-    console.log(req.query.display_id);
+    //console.log(req.query.display_id);
     if(req.query.display_id != undefined){
         let dbConn = createNewConn("mangos"); //icon info is in here
         const queryString = `SELECT icon FROM item_display_info WHERE id=${req.query.display_id}`;
         dbConn.connect();
         dbConn.query(queryString, (err, rows, fields) => {
-            res.status(200).send(rows);
+            //check if icon exists
+            let iconUrl = null;
+            if(err == null){
+                if(rows.length > 0){
+                    let iconName = `${rows[0].icon}.png`;
+                    let iconPath = path.join(ICON_DIR, iconName);
+                    if(fs.existsSync(iconPath)){
+                        rows[0].url = `${req.protocol}://${req.get('host')}/${iconName}`;
+                    }else{
+                        rows[0].url = null;
+                    }
+                    res.status(200).send(rows);
+                }else{
+                    res.status(404).send("not found");
+                }
+            }else{
+                res.status(500).send("server Err: "+err);
+            }
         })
         dbConn.end();
     }
