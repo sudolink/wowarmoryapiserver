@@ -5,6 +5,7 @@ import fs from "fs";
 import cors from "cors";
 import https from "https";
 import {apiv1} from "./routes/apiv1.js";
+import {apiv2} from "./routes/apiv2.js";
 
 
 const app = express();
@@ -33,12 +34,13 @@ function reportRequest(req,res,next){
     console.log(req.url);
     next()
 }
-//app.use(reportRequest);
+app.use(reportRequest);
 
 
 //ROUTES
 
 app.use("/api/v1", apiv1);
+app.use("/api/v2", apiv2);
 
 
 https.createServer(options, app)
