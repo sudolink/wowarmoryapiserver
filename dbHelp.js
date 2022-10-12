@@ -17,36 +17,7 @@ function checkNameValid(name){
     return true //while developing...
 }
 
-function getAllChars(){
-    console.log("empty")
-}
-
-function getChar(charName){
-    if(checkNameValid(charName)){
-        const charQuery = `SELECT guid,name,race,class,gender,level,online FROM characters WHERE name="${charName}"`;
-        let curConn = createNewConn();
-        curConn.query(charQuery, (err, rows, fields) => {
-            if(err != null){
-                curConn.end()
-                return "DBERR: " + err;
-            }else{
-                if(rows.length < 1){
-                    curConn.end()
-                    return "No such character found"
-                }else{
-                    curConn.end()
-                    return rows[0];
-                }
-            }
-        })
-    }else{
-        return "Invalid name: " + charName;
-    }
-}
-
 export {
     createNewConn,
-    checkNameValid,
-    getAllChars,
-    getChar
+    checkNameValid
 };

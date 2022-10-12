@@ -34,7 +34,7 @@ apiv2.get("/getCharAndGear", (req,res)=>{
     if(!checkNameValid(req.query.name)){
         res.status(404).send("Invalid name requested:" + req.query.name)
     }else{    
-        let charQuery = `SELECT guid,name,race,class,gender,level,online FROM characters WHERE name="${req.query.name}"`
+        let charQuery = `SELECT guid,name,race,class,gender,level,online,honor_highest_rank,health,skin,face,hair_style,hair_color,facial_hair FROM characters WHERE name="${req.query.name}"`
         charConn.query(charQuery, (err,rows,fields) => {
             if(err != null){    
                 res.status(500).send("DBERR: "+err);
@@ -46,7 +46,7 @@ apiv2.get("/getCharAndGear", (req,res)=>{
                 }else{
                     dbResponse = rows[0];
                     //1st nested query (gear) $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-                    let gearQuery = `SELECT slot, item, item_template FROM character_inventory WHERE guid=${rows[0].guid} AND bag=0 AND slot < 19 ORDER BY slot`;10
+                    let gearQuery = `SELECT slot, item_guid, item_id FROM character_inventory WHERE guid=${rows[0].guid} AND bag=0 AND slot < 19 ORDER BY slot`;
                     charConn.query(gearQuery, (err, rows, fields) => {
                         if(err){
                             res.status(500).send(`1st Nested -> DBERR ${err}`);
@@ -56,9 +56,9 @@ apiv2.get("/getCharAndGear", (req,res)=>{
                             //2nd nested query (item details) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                             charConn.end()//can safely close 'characters' db connection
                             let itemEntries = dbResponse.equipment.map(item => {
-                                return item.item_template;
+                                return item.item_id;
                             })
-                            let itemBasesQuery = `SELECT * FROM item_template WHERE entry IN (${itemEntries}) AND class IN (2,4)`;
+                            let itemBasesQuery = `SELECT * FROM item_template WHERE entry IN (${itemEntries}) AND class IN (2,4);`;
                             mangosConn.query(itemBasesQuery, (err,rows,fields)=>{
                                 if(err){
                                     res.status(500).send(`2nd nested -> DBERR ${err}`);
@@ -66,7 +66,7 @@ apiv2.get("/getCharAndGear", (req,res)=>{
                                 }else{
                                     rows.forEach(re => {
                                         dbResponse.equipment = dbResponse.equipment.map(item => {
-                                            return item.item_template == re.entry
+                                            return item.item_id == re.entry
                                                     ? {...item, ...re}
                                                     : {...item}
                                         })

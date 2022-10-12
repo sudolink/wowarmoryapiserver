@@ -17,10 +17,10 @@ apiv1.get("/getAllCharNames", (req,res) => {
             if (err) throw err;
             //send all charnames to frontend so we don't have to query the backend on every keystroke in the search field.
             //this gets requested on load on the frontend
-            res.status(200).send(rows);
+            res.status(200).send(rows);    
+            dbConn.end();
             console.log("fetched all chars...")
-    });
-    dbConn.end();    
+    });   
 })
 
 apiv1.get("/getchar", (req,res) => {
