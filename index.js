@@ -7,6 +7,7 @@ import cors from "cors";
 import https from "https";
 import {apiv1} from "./routes/apiv1.js";
 import {apiv2} from "./routes/apiv2.js";
+import {apiv3} from "./routes/apiv3.js";
 
 
 const app = express();
@@ -42,13 +43,14 @@ app.use(reportRequest);
 
 app.use("/api/v1", apiv1);
 app.use("/api/v2", apiv2);
+app.use("/api/v3", apiv3)
 
 
-https.createServer(options, app)
-.listen(PORT, function (req, res){
-    console.log(`Server running on PORT: ${PORT}`)
-});
+// https.createServer(options, app)
+// .listen(PORT, function (req, res){
+//     console.log(`Server running on PORT: ${PORT}`)
+// });
 
-// app.listen(PORT, () => {
-//     console.log(`Server running on PORT: ${PORT}`);
-// })
+app.listen(PORT, () => {
+    console.log(`Server running on PORT: ${PORT}`);
+})
