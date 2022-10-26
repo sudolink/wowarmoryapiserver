@@ -20,6 +20,11 @@ characters database:
 characters          (need player's guid for equipment checking, class, and visuals),
 character_inventory (checking only slots 0-18, i.e. what is equipped)
 item_instance       (checking item instance for enchantments)
+*outdated list*
 
 mangos database:
 item_template       (get base item info)
+*outdated list*
+
+You will also need to make a separate database and name it something like 'armorydbc' that will contain the talent, ability, and talent tab information ported from the client. The api server needs this info to send talent-tree info about requested characters to the front-end app.
+the files needed to be sourced into that new database are in the 'ArmorySQL' folder of this project. You can run them directly or source them from the mysql cli. Be sure to use/select the armory database before running them.
