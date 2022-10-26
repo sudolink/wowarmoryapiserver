@@ -28,3 +28,5 @@ item_template       (get base item info)
 
 You will also need to make a separate database and name it something like 'armorydbc' that will contain the talent, ability, and talent tab information ported from the client. The api server needs this info to send talent-tree info about requested characters to the front-end app.
 the files needed to be sourced into that new database are in the 'ArmorySQL' folder of this project. You can run them directly or source them from the mysql cli. Be sure to use/select the armory database before running them.
+Each file will generate a new table named 'db_name-of-file_patchInt'
+e.g. -> 'db_SkillLine_5875'

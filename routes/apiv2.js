@@ -153,10 +153,16 @@ apiv2.get("/getCharSkillLineAbilities", (req, res) => {
                                             charConn.end()
                                             let mangosConn = createNewConn('mangos');
                                             let spellList = rows.map(row => row['spell']) //only spell ids
+
                                             let onlyTalentsSpellList = [];
                                             spellList.map(spellID => {
                                                 isTalent(spellID) && onlyTalentsSpellList.push(spellID);
                                             })
+                                            const clientver = '5875';
+                                            let spellSkillLinesQuery = `SELECT SkillLine, spell FROM db_SkillLineAbility_${clientver} WHERE spell in ${spellList}`;
+                                            let spellSkillLines = [];
+                                            let onlyTalents = `SELECT ID,CategoryID, DisplayName_enUS FROM db_SkillLine_${clientver} WHERE ID in ${spellSkillLines}`;
+
                                             let spellTemplateQuery = `SELECT * FROM spell_template WHERE entry in (${onlyTalentsSpellList})`;
                                             mangosConn.connect();
                                             mangosConn.query(spellTemplateQuery, (err, rows, fields) => {
