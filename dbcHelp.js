@@ -76,9 +76,9 @@ function getPopulatedTalentTree(talentTree, spell) {
 }
 
 function isTalent(spellUINT) {
-    let ability = skillLineAbilityDataRESTRUCTURED[`${spellUINT}`];
-    let skillLine = getSkillLine(ability['SkillLine']);
-    return skillLine['CategoryID'] == 7 // 7 is for talents
+    let ability = skillLineAbilityDataRESTRUCTURED[`${spellUINT}`] || null;
+    let skillLine = ability != null ? getSkillLine(ability['SkillLine']) : null;
+    return skillLine?.CategoryID == 7// 7 is for talents
 }
 
 export {
